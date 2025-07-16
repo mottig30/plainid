@@ -1,0 +1,35 @@
+# METADATA
+# custom:
+#   plainid:
+#     policyId: aaba4006-fcde-4dbb-a4de-487b188c43ca
+#     name: gen ai
+#     accessType: Allow
+#     policyUse: DYNAMIC_AUTHORIZATION_SERVICE
+#     applications: 
+#       - id: cases
+#     customAttributes:
+#       DRY_RUN: "AccountId"
+package policy
+import rego.v1
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: DynamicGroup
+#     name: User All Users
+#     id: 477d45d8-170a-4f02-91d5-1e98aee41275
+#     description: "Predefined Dynamic Group. All Users contains all organization's users defined in the IDP"
+dynamic_group(identity) if {
+	identity.template == "User"
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: hr
+#     id: cac1879f-6f17-477c-8387-6d693d35b4b8
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "categories"
+	asset["path"] == "hr"
+}

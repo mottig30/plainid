@@ -1,0 +1,96 @@
+# METADATA
+# custom:
+#   plainid:
+#     policyId: c6850898-220b-4fa3-8da3-3a841879ef52
+#     name: GBQ Policy
+#     accessType: Allow
+#     policyUse: DYNAMIC_AUTHORIZATION_SERVICE
+#     applications: 
+#       - id: sql-app
+package policy
+import rego.v1
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: DynamicGroup
+#     name: User All Users
+#     id: 477d45d8-170a-4f02-91d5-1e98aee41275
+#     description: "Predefined Dynamic Group. All Users contains all organization's users defined in the IDP"
+dynamic_group(identity) if {
+	identity.template == "User"
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: PII
+#     id: 0560c0f7-43a6-445a-b20e-42edcd3f8bef
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "columns"
+	asset["classification"] == "PII"
+	asset["projectid"] == "glass-sequence-458812-v8"
+	asset["dataset"] == "ds1"
+	asset["table"] == "accounts"
+	action.id in ["LADI"]
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: All
+#     id: 2cfb0d10-b66f-435b-9790-7e0f76483dc8
+#     description: "Predefined Ruleset. All Assets contains all created assets defined in the Asset Type"
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "columns2"
+	action.id in ["SHOW"]
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: PII 2
+#     id: 92883b50-6be5-418e-848b-9d1e6be9f11a
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "columns2"
+	asset["classification"] == "PII"
+	action.id in ["SHOW"]
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: All
+#     id: 4d66e5f2-659e-46f0-ba21-a0dc11a0ebd3
+#     description: "Predefined Ruleset. All Assets contains all created assets defined in the Asset Type"
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "glass-sequence-458812-v8.ds1.accounts"
+	action.id in ["asd"]
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: is 18
+#     id: 34d11e9b-7a71-4eeb-a211-33aa619e5b14
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "glass-sequence-458812-v8.ds1.accounts"
+	asset["age"] > 17
+	action.id in ["asd"]
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: All
+#     id: decaba0f-5e8c-4690-a23b-1a3eff5b07d9
+#     description: "Predefined Ruleset. All Assets contains all created assets defined in the Asset Type"
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "glass-sequence-458812-v8.ds1.user_account"
+}

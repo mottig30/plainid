@@ -1,0 +1,48 @@
+# METADATA
+# custom:
+#   plainid:
+#     policyId: 2fc50ea2-21ce-40ad-82f9-0a215b5a2682
+#     name: sql authorizer columns test 1
+#     accessType: Allow
+#     policyUse: DYNAMIC_AUTHORIZATION_SERVICE
+#     applications: 
+#       - id: sql-authorizer-app
+#     customAttributes:
+#       DRY_RUN: "AccountId"
+package policy
+import rego.v1
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: DynamicGroup
+#     name: User All Users
+#     id: 477d45d8-170a-4f02-91d5-1e98aee41275
+#     description: "Predefined Dynamic Group. All Users contains all organization's users defined in the IDP"
+dynamic_group(identity) if {
+	identity.template == "User"
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: age is 16
+#     id: 479df134-4840-4cb1-ac18-acc6c37ef3a7
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "SQL-Columns-1"
+	asset["age"] == "3qwe"
+	action.id in ["asd"]
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: asset1
+#     id: b9ebda69-74b1-4801-bc73-4521a4249315
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "SQL-Columns-1"
+	asset["path"] == "asset1"
+	action.id in ["asd"]
+}
