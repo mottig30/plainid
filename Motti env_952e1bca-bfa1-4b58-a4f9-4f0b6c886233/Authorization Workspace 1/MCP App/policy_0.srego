@@ -1,12 +1,14 @@
 # METADATA
 # custom:
 #   plainid:
-#     policyId: d41b4edb-19ba-4487-a76e-5f9ed4b273fa
-#     name: same asset type diff assets only allow
+#     policyId: b01e369c-cfbc-4348-a451-975d3f8bd2b7
+#     name: MCP Proxy for Tools
 #     accessType: Allow
 #     policyUse: DYNAMIC_AUTHORIZATION_SERVICE
 #     applications: 
-#       - id: cortApp
+#       - id: MCP-App
+#     customAttributes:
+#       DRY_RUN: "AccountId"
 package policy
 import rego.v1
 
@@ -25,34 +27,31 @@ dynamic_group(identity) if {
 # custom:
 #   plainid:
 #     kind: Ruleset
-#     name: id1
-#     id: c146258f-e5a0-4646-89e3-3c9cf38781ef
+#     name: All
+#     id: 51c7b54b-18de-41a5-8bc4-708e14829bff
+#     description: "Predefined Ruleset. All Assets contains all created assets defined in the Asset Type"
 ruleset(asset, identity, requestParams, action) if {
-	asset.template == "Columns"
-	asset["path"] == "id1"
-	action.id in ["filter"]
+	asset.template == "tools"
 }
 
 # METADATA
 # custom:
 #   plainid:
 #     kind: Ruleset
-#     name: cort1
-#     id: 2b7878a5-e250-46b8-93d4-2d3bce6282ef
+#     name: filesystem
+#     id: ee029f45-0c18-44dd-869e-0567dd025832
 ruleset(asset, identity, requestParams, action) if {
-	asset.template == "Cortage"
-	asset["c1"] == "aaa"
-	asset["c2"] != "someValue"
-	action.id in ["view"]
+	asset.template == "tools"
+	asset["path"] == "filesystem"
 }
 
 # METADATA
 # custom:
 #   plainid:
 #     kind: Ruleset
-#     name: blue
-#     id: c8c48aa7-bbf1-4093-a615-5bf08679929a
+#     name: read file
+#     id: f5968de2-3932-4937-a85a-e40e33eac096
 ruleset(asset, identity, requestParams, action) if {
-	asset.template == "NoneCortage"
-	asset["path"] == "blue"
+	asset.template == "tools"
+	asset["path"] == "read_file"
 }

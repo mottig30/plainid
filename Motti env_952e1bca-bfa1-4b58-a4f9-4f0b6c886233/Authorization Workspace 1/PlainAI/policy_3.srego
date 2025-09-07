@@ -1,12 +1,13 @@
 # METADATA
 # custom:
 #   plainid:
-#     policyId: 2fc50ea2-21ce-40ad-82f9-0a215b5a2682
-#     name: sql authorizer columns test 1
+#     policyId: 1c8b9fcb-7e27-49a5-9985-6e5f0251590f
+#     name: All Users can view issues
+#     description: "All users can view Jira issues"
 #     accessType: Allow
 #     policyUse: DYNAMIC_AUTHORIZATION_SERVICE
 #     applications: 
-#       - id: sql-authorizer-app
+#       - id: PlainAI
 #     customAttributes:
 #       DRY_RUN: "AccountId"
 package policy
@@ -27,22 +28,9 @@ dynamic_group(identity) if {
 # custom:
 #   plainid:
 #     kind: Ruleset
-#     name: age is 16
-#     id: 479df134-4840-4cb1-ac18-acc6c37ef3a7
+#     name: view_issue
+#     id: 9b85c9f1-876e-4927-a5c5-a11f9004c311
 ruleset(asset, identity, requestParams, action) if {
-	asset.template == "SQL-Columns-1"
-	asset["age"] == "3qwe"
-	action.id in ["asd"]
-}
-
-# METADATA
-# custom:
-#   plainid:
-#     kind: Ruleset
-#     name: asset1
-#     id: b9ebda69-74b1-4801-bc73-4521a4249315
-ruleset(asset, identity, requestParams, action) if {
-	asset.template == "SQL-Columns-1"
-	asset["path"] == "asset1"
-	action.id in ["asd"]
+	asset.template == "MCPTool"
+	asset["path"] == "view_issue"
 }

@@ -1,0 +1,36 @@
+# METADATA
+# custom:
+#   plainid:
+#     policyId: a6372627-8d3f-4d07-be8b-57a9d58ba572
+#     name: Only Product Managers Can Create Jira Issues
+#     description: "Policy that enforce only users that are product managers will able to create issues with mcp"
+#     accessType: Allow
+#     policyUse: DYNAMIC_AUTHORIZATION_SERVICE
+#     applications: 
+#       - id: PlainAI
+#     customAttributes:
+#       DRY_RUN: "AccountId"
+package policy
+import rego.v1
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: DynamicGroup
+#     name: Product Managers
+#     id: 73dd3f0c-2dc8-4b09-a21c-8f8271c721b6
+dynamic_group(identity) if {
+	identity.template == "user_for_plainai"
+	identity["role"] == "product_manager"
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: create_issue
+#     id: ea9e6edd-837f-4ec6-84d6-1e4dd8c459c2
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "MCPTool"
+	asset["path"] == "create_issue"
+}

@@ -1,0 +1,37 @@
+# METADATA
+# custom:
+#   plainid:
+#     policyId: 7e051454-7730-4a38-8102-154bd0f38e2e
+#     name: Only HR Employee Can Access HR Data
+#     accessType: Allow
+#     policyUse: DYNAMIC_AUTHORIZATION_SERVICE
+#     applications: 
+#       - id: PlainAI
+#     customAttributes:
+#       DRY_RUN: "AccountId"
+package policy
+import rego.v1
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: DynamicGroup
+#     name: HR Employees
+#     id: b4a14547-5474-409e-b42d-2fa79a3b150b
+#     description: "Only employees of the HR department can access HR data"
+dynamic_group(identity) if {
+	identity.template == "user_for_plainai"
+	identity["departnment"] == "HR"
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: Classification is PII and Category HR
+#     id: 201981e3-3d58-454f-b881-9022cc633553
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "category"
+	asset["Classification"] == "PII"
+	asset["path"] == "HR"
+}

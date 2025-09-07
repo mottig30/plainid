@@ -1,12 +1,14 @@
 # METADATA
 # custom:
 #   plainid:
-#     policyId: d41b4edb-19ba-4487-a76e-5f9ed4b273fa
-#     name: same asset type diff assets only allow
+#     policyId: bcf57d75-6e6b-426e-a10f-3328cce5e7c1
+#     name: Filter by Country And PII
 #     accessType: Allow
 #     policyUse: DYNAMIC_AUTHORIZATION_SERVICE
 #     applications: 
-#       - id: cortApp
+#       - id: sql-app
+#     customAttributes:
+#       DRY_RUN: "AccountId"
 package policy
 import rego.v1
 
@@ -14,45 +16,46 @@ import rego.v1
 # custom:
 #   plainid:
 #     kind: DynamicGroup
-#     name: User All Users
-#     id: 477d45d8-170a-4f02-91d5-1e98aee41275
-#     description: "Predefined Dynamic Group. All Users contains all organization's users defined in the IDP"
+#     name: Users From Israel
+#     id: b171b5a9-f635-4fe7-8f86-6a018425ad5a
 dynamic_group(identity) if {
-	identity.template == "User"
+	identity.template == "sqlappuser"
+	identity["country"] == "Israel"
 }
 
 # METADATA
 # custom:
 #   plainid:
 #     kind: Ruleset
-#     name: id1
-#     id: c146258f-e5a0-4646-89e3-3c9cf38781ef
+#     name: All
+#     id: 4d66e5f2-659e-46f0-ba21-a0dc11a0ebd3
+#     description: "Predefined Ruleset. All Assets contains all created assets defined in the Asset Type"
 ruleset(asset, identity, requestParams, action) if {
-	asset.template == "Columns"
-	asset["path"] == "id1"
-	action.id in ["filter"]
+	asset.template == "Business_Data"
 }
 
 # METADATA
 # custom:
 #   plainid:
 #     kind: Ruleset
-#     name: cort1
-#     id: 2b7878a5-e250-46b8-93d4-2d3bce6282ef
+#     name: PII And Customers
+#     id: a6e24eb7-7f6e-4402-ad41-d38b93550f9a
 ruleset(asset, identity, requestParams, action) if {
-	asset.template == "Cortage"
-	asset["c1"] == "aaa"
-	asset["c2"] != "someValue"
-	action.id in ["view"]
+	asset.template == "columns"
+	asset["table"] == "customers"
+	asset["classification"] == "PII"
+	action.id in ["Null"]
 }
 
 # METADATA
 # custom:
 #   plainid:
 #     kind: Ruleset
-#     name: blue
-#     id: c8c48aa7-bbf1-4093-a615-5bf08679929a
+#     name: PII And Accounts
+#     id: 0560c0f7-43a6-445a-b20e-42edcd3f8bef
 ruleset(asset, identity, requestParams, action) if {
-	asset.template == "NoneCortage"
-	asset["path"] == "blue"
+	asset.template == "columns"
+	asset["classification"] == "PII"
+	asset["table"] == "accounts"
+	action.id in ["maskSSN"]
 }

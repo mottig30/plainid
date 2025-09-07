@@ -1,8 +1,8 @@
 # METADATA
 # custom:
 #   plainid:
-#     policyId: aaba4006-fcde-4dbb-a4de-487b188c43ca
-#     name: Gen AI
+#     policyId: 87269e7f-9f80-403f-831e-86655e32af06
+#     name: Tier-1 Support EU
 #     accessType: Allow
 #     policyUse: DYNAMIC_AUTHORIZATION_SERVICE
 #     applications: 
@@ -16,11 +16,13 @@ import rego.v1
 # custom:
 #   plainid:
 #     kind: DynamicGroup
-#     name: User All Users
-#     id: 477d45d8-170a-4f02-91d5-1e98aee41275
-#     description: "Predefined Dynamic Group. All Users contains all organization's users defined in the IDP"
+#     name: EU Tier-1 Support
+#     id: 6cd4bb09-edb0-4bf2-96cc-5f85cc81a8de
+#     description: "Dynamic group for tier-1 support analyst for EU region"
 dynamic_group(identity) if {
 	identity.template == "User"
+	identity["1234"] == "tier_1_support"
+	identity["Region"] == "EU"
 }
 
 # METADATA
@@ -43,27 +45,4 @@ ruleset(asset, identity, requestParams, action) if {
 ruleset(asset, identity, requestParams, action) if {
 	asset.template == "categories"
 	asset["path"] == "login issues"
-}
-
-# METADATA
-# custom:
-#   plainid:
-#     kind: Ruleset
-#     name: user country
-#     id: add48af2-9626-40b5-832d-16458d299f08
-ruleset(asset, identity, requestParams, action) if {
-	asset.template == "docs"
-	asset["country"] == "country"
-}
-
-# METADATA
-# custom:
-#   plainid:
-#     kind: Ruleset
-#     name: PII
-#     id: f67a05a5-393f-4301-a837-de6b275a5f49
-ruleset(asset, identity, requestParams, action) if {
-	asset.template == "entities"
-	asset["classification"] == "PII"
-	action.id in ["Mask"]
 }

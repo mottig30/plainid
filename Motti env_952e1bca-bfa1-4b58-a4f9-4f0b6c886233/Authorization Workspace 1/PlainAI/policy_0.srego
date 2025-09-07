@@ -1,0 +1,68 @@
+# METADATA
+# custom:
+#   plainid:
+#     policyId: e4177c8a-f446-4566-903f-1c58565d2162
+#     name: Only EMEA Product Mangers Can Read Files
+#     accessType: Allow
+#     policyUse: DYNAMIC_AUTHORIZATION_SERVICE
+#     applications: 
+#       - id: PlainAI
+#     customAttributes:
+#       DRY_RUN: "AccountId"
+package policy
+import rego.v1
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: DynamicGroup
+#     name: EMEA
+#     id: a70420dc-a786-41b3-a675-9ce948d5aeb3
+dynamic_group(identity) if {
+	identity.template == "user_for_plainai"
+	identity["country"] == "israel"
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: DynamicGroup
+#     name: EMEA
+#     id: a70420dc-a786-41b3-a675-9ce948d5aeb3
+dynamic_group(identity) if {
+	identity.template == "user_for_plainai"
+	identity["country"] == "France"
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: DynamicGroup
+#     name: EMEA
+#     id: a70420dc-a786-41b3-a675-9ce948d5aeb3
+dynamic_group(identity) if {
+	identity.template == "user_for_plainai"
+	identity["country"] == "Kenia"
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: DynamicGroup
+#     name: Product Managers
+#     id: 73dd3f0c-2dc8-4b09-a21c-8f8271c721b6
+dynamic_group(identity) if {
+	identity.template == "user_for_plainai"
+	identity["role"] == "product_manager"
+}
+
+# METADATA
+# custom:
+#   plainid:
+#     kind: Ruleset
+#     name: Read File
+#     id: 06867933-4ac1-4cb3-843f-ed9b430b85b7
+ruleset(asset, identity, requestParams, action) if {
+	asset.template == "mcp_resource"
+	asset["path"] == "Read File"
+}
